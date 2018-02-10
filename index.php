@@ -6,9 +6,12 @@
  * Time: 14.20
  */
 
-if(isset($_POST['user']) && $user = $_POST['user'] != "" && isset($_POST['passwd']) && $passwd = $_POST['passwd'] != ""){
+include_once "connessione.php";
+include_once "checkLogin.php";
 
-    include_once "connessione.php";
+checkLogin($conn, true);
+
+if(isset($_POST['user']) && ($user = $_POST['user']) != "" && isset($_POST['passwd']) && ($passwd = $_POST['passwd']) != ""){
 
     $prep = $conn->prepare("SELECT * FROM users WHERE username = ?;");
     $prep->bind_param('s', $user);
@@ -18,7 +21,6 @@ if(isset($_POST['user']) && $user = $_POST['user'] != "" && isset($_POST['passwd
     if ($ris->num_rows == 0) {
         $usernameNotFound = true;
     } else {
-
         $row = $ris->fetch_array(MYSQLI_ASSOC);
 
         $salt = $row['salt'];
@@ -67,12 +69,12 @@ if(isset($_POST['user']) && $user = $_POST['user'] != "" && isset($_POST['passwd
 
                         <div class="form-group has-danger">
                             <label for="user" class="form-control-label">Username</label>
-                            <input class="form-control" type="text" name="user" id="user" <?php if(isset($usernameNotFound) && $usernameNotFound) echo "is-invalid"; ?>>
+                            <input class="form-control <?php if(isset($usernameNotFound) && $usernameNotFound) echo "is-invalid"; ?>" type="text" name="user" id="user" value="<?php if(isset($user)) echo $user; ?>">
                             <div class="invalid-feedback" id="userError"><?php if(isset($usernameNotFound)) if($usernameNotFound) echo "Username non valido"; ?></div>
                         </div>
                         <div class="form-group has-danger">
                             <label for="passwd" class="form-control-label">Password</label>
-                            <input class="form-control" type="password" name="passwd" id="passwd" <?php if(isset($wrongPasswd) && $wrongPasswd) echo "is-invalid"; ?>>
+                            <input class="form-control <?php if(isset($wrongPasswd) && $wrongPasswd) echo "is-invalid"; ?>" type="password" name="passwd" id="passwd">
                             <div class="invalid-feedback" id="passwdError"><?php if(isset($wrongPasswd)) if($wrongPasswd) echo "Password errata"; ?></div>
                         </div>
                         <div class="form-group">
@@ -117,6 +119,14 @@ if(isset($_POST['user']) && $user = $_POST['user'] != "" && isset($_POST['passwd
             if(requiredItem("user") && requiredItem("passwd") )
                 $("#loginForm").submit();
         }
+
+        $("#loginForm").keypress(function (event) {
+            if (event.which == 13 || event.keyCode == 13) {
+                formValidation();
+                return false;
+            }
+            return true;
+        });
 
     </script>
 
