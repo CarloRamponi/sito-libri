@@ -129,7 +129,7 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
 
     //form validation
 
-    function requiredItem (str) {
+    function requiredItem (str, minLength = 0) {
         val = $("#"+str);
         if(val.val() === "") {
             $("#"+str+"Error").text("Campo obbligatorio!");
@@ -137,8 +137,14 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
             return false;
         }
         else {
-            val.removeClass("is-invalid");
-            return true;
+            if(val.val().length < minLength) {
+                $("#"+str+"Error").text("Lunghezza minima: "+minLength+"!");
+                val.addClass("is-invalid").removeClass("is-valid");
+                return false;
+            } else {
+                val.removeClass("is-invalid");
+                return true;
+            }
         }
     };
 
@@ -182,7 +188,7 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
 
     function checkUsername (str) {
 
-        if(!requiredItem("user"))
+        if(!requiredItem("user", 4))
             return false;
 
         xmlhttp = new XMLHttpRequest();
