@@ -217,7 +217,7 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
 
     $("#name").focusout( function () { requiredItem("name") } );
     $("#surname").focusout( function () { requiredItem("surname") } );
-    $("#user").focusout( function () { checkUsername("user") } );
+    $("#user").keyup( function () { checkUsername("user") } );
     $("#passwd").focusout( function () { checkPassword("passwd") } );
     $("#confirmPasswd").focusout( function () { checkConfirmPassword("confirmPasswd") } );
 
