@@ -13,6 +13,12 @@ checkLogin($conn, true);
 
 if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surname']) && ($surname = $_POST['surname']) != "" && isset($_POST['user']) && ($user = $_POST['user']) != "" && isset($_POST['passwd']) && ($passwd = $_POST['passwd']) != "" && isset($_POST['confirmPasswd']) && ($confirmPasswd = $_POST['confirmPasswd']) != ""){
 
+    if(count_chars($passwd) < 8)
+        die("La password deve essere lunga almeno 8 caratteri!");
+
+    if($passwd != $confirmPasswd)
+        die("Le password non corrispondono!");
+
     $prep = $conn->prepare("SELECT * FROM users WHERE username = ?;");
     $prep->bind_param('s', $user);
     $prep->execute();
@@ -75,20 +81,21 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
 
                     <div class="form-group has-danger">
                         <label for="name" class="form-control-label">Nome</label>
-                        <input class="form-control" type="text" name="name" id="name">
+                        <input class="form-control" type="text" name="name" id="name" value="<?php if(isset($name)) echo $name; ?>">
                         <div class="invalid-feedback" id="nameError">Campo obbligatorio!</div>
                     </div>
 
                     <div class="form-group has-danger">
                         <label for="surname" class="form-control-label">Cognome</label>
-                        <input class="form-control" type="text" name="surname" id="surname">
+                        <input class="form-control" type="text" name="surname" id="surname" value="<?php if(isset($surname)) echo $surname; ?>">
                         <div class="invalid-feedback" id="surnameError">Campo obbligatorio!</div>
                     </div>
 
-                    <div class="form-group has-danger">
+                    <div class="form-group has-danger has-success">
                         <label for="user" class="form-control-label">Scegli un username</label>
-                        <input class="form-control" type="text" name="user" id="user" <?php if(isset($usernameExists) && $usernameExists) echo "is_invalid"; ?>>
+                        <input class="form-control <?php if(isset($usernameExists) && $usernameExists) echo "is-invalid"; ?>" type="text" name="user" id="user" value="<?php if(isset($user)) echo $user; ?>" >
                         <div class="invalid-feedback" id="userError">Username già presente!</div>
+                        <div class="valid-feedback">Username valido!</div>
                     </div>
                     <div class="form-group has-danger">
                         <label for="passwd" class="form-control-label">Scegli una password</label>
@@ -126,7 +133,7 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
         val = $("#"+str);
         if(val.val() === "") {
             $("#"+str+"Error").text("Campo obbligatorio!");
-            val.addClass("is-invalid");
+            val.addClass("is-invalid").removeClass("is-valid");
             return false;
         }
         else {
@@ -173,14 +180,43 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
 
     }
 
+    function checkUsername (str) {
+
+        if(!requiredItem("user"))
+            return false;
+
+        xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function (ev) {
+            if(this.readyState === 4 && this.status === 200) {
+                var response = JSON.parse(this.responseText);
+                if(response['request'] === 'usernameExists'){
+                    if(response['response'] === true){
+                        $("#"+str+"Error").text("Username già presente!");
+                        $("#"+str).addClass("is-invalid").removeClass("is-valid");
+                    } else {
+                        $("#"+str).addClass("is-valid").removeClass("is-invalid");
+                    }
+                }
+            }
+
+        }
+
+        xmlhttp.open("GET", "api.php?req=usernameExists&user="+$("#"+str).val());
+        xmlhttp.send();
+
+        return true;
+
+    }
+
     $("#name").focusout( function () { requiredItem("name") } );
     $("#surname").focusout( function () { requiredItem("surname") } );
-    $("#user").focusout( function () { requiredItem("user") } );
+    $("#user").focusout( function () { checkUsername("user") } );
     $("#passwd").focusout( function () { checkPassword("passwd") } );
     $("#confirmPasswd").focusout( function () { checkConfirmPassword("confirmPasswd") } );
 
     function formValidation () {
-        if(requiredItem("name") && requiredItem("surname") && requiredItem("user") && checkPassword("passwd") && checkConfirmPassword("confirmPasswd") )
+        if(requiredItem("name") && requiredItem("surname") && checkUsername("user") && checkPassword("passwd") && checkConfirmPassword("confirmPasswd") )
             $("#registerForm").submit();
     }
 
