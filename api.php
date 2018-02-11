@@ -7,6 +7,7 @@
  */
 
 include_once "connessione.php";
+include_once "checkLogin.php";
 
 if(isset($_GET['req'])) {
 

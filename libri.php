@@ -17,7 +17,7 @@ $user = checkLogin($conn);
 <html>
 
 <head>
-    <title>BooksReviews - Home</title>
+    <title>BooksReviews - Libri</title>
 
     <link rel="stylesheet" href="https://bootswatch.com/_vendor/bootstrap/dist/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -27,7 +27,7 @@ $user = checkLogin($conn);
     <body>
 
         <?php
-            $pageNum = 1;
+            $pageNum = 2;
             include "navbar.php";
         ?>
 

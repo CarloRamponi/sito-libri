@@ -238,5 +238,7 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
 
 </body>
 
+<script src="https://bootswatch.com/_vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+
 </html>
 

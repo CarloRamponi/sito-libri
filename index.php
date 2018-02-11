@@ -9,6 +9,12 @@
 include_once "connessione.php";
 include_once "checkLogin.php";
 
+session_start();
+
+if(isset($_GET['req']) && $_GET['req'] == "logout"){
+    unset($_SESSION['user']);
+}
+
 checkLogin($conn, true);
 
 if(isset($_POST['user']) && ($user = $_POST['user']) != "" && isset($_POST['passwd']) && ($passwd = $_POST['passwd']) != ""){
@@ -131,6 +137,8 @@ if(isset($_POST['user']) && ($user = $_POST['user']) != "" && isset($_POST['pass
     </script>
 
 </body>
+
+<script src="https://bootswatch.com/_vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 
 </html>
 
