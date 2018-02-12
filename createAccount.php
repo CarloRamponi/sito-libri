@@ -13,7 +13,7 @@ checkLogin($conn, true);
 
 if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surname']) && ($surname = $_POST['surname']) != "" && isset($_POST['user']) && ($user = $_POST['user']) != "" && isset($_POST['passwd']) && ($passwd = $_POST['passwd']) != "" && isset($_POST['confirmPasswd']) && ($confirmPasswd = $_POST['confirmPasswd']) != ""){
 
-    if(count_chars($passwd) < 8)
+    if(strlen($passwd) < 8)
         die("La password deve essere lunga almeno 8 caratteri!");
 
     if($passwd != $confirmPasswd)
@@ -39,7 +39,7 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
         if($ris == 0){
 
             $_SESSION['user'] = $user;
-            header("Location: home.php");
+            header("Location: libri.php");
 
         } else {
             die("Errore");
@@ -56,8 +56,7 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
 <head>
     <title>BooksReviews - Registrazione</title>
 
-    <link rel="stylesheet" href="https://bootswatch.com/_vendor/bootstrap/dist/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <?php include_once "includes.html"; ?>
 
 </head>
 
@@ -227,7 +226,7 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
     }
 
     $("#registerForm").keypress(function (event) {
-        if (event.which == 13 || event.keyCode == 13) {
+        if (event.which === 13 || event.keyCode === 13) {
             formValidation();
             return false;
         }
@@ -237,8 +236,6 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
 </script>
 
 </body>
-
-<script src="https://bootswatch.com/_vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 
 </html>
 

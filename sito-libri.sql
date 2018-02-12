@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Feb 11, 2018 alle 09:09
+-- Creato il: Feb 12, 2018 alle 16:14
 -- Versione del server: 10.1.30-MariaDB
 -- Versione PHP: 7.2.2
 
@@ -21,6 +21,30 @@ SET time_zone = "+00:00";
 --
 -- Database: `sito-libri`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `libri`
+--
+
+CREATE TABLE `libri` (
+  `isbn` char(13) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `titolo` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `autore` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `annoUscita` year(4) NOT NULL,
+  `genere` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dump dei dati per la tabella `libri`
+--
+
+INSERT INTO `libri` (`isbn`, `titolo`, `autore`, `annoUscita`, `genere`) VALUES
+('9788804679301', 'e buona notte', 'Daniele Doesn\'t Matter', 2017, 'Fantasy'),
+('9788804686118', 'Sono sempre io', 'Jojo Moyes', 2017, 'Narrativa moderna e contemporanea'),
+('9788806236151', 'La fisica nelle cose di ogni giorno', 'James Kakalios', 2017, 'Fisica'),
+('9788817102001', 'Ore 15:17 attacco al treno', 'Anthony Sadler, Alek Skarlatos, Spencer Stone...', 2017, 'Contemporanea');
 
 -- --------------------------------------------------------
 
@@ -47,6 +71,12 @@ INSERT INTO `users` (`id`, `nome`, `cognome`, `username`, `passwd`, `salt`) VALU
 --
 -- Indici per le tabelle scaricate
 --
+
+--
+-- Indici per le tabelle `libri`
+--
+ALTER TABLE `libri`
+  ADD PRIMARY KEY (`isbn`);
 
 --
 -- Indici per le tabelle `users`

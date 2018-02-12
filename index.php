@@ -34,7 +34,7 @@ if(isset($_POST['user']) && ($user = $_POST['user']) != "" && isset($_POST['pass
 
         if ($hasedPasswd == $row['passwd']) {
             $_SESSION['user'] = $user;
-            header("Location: home.php");
+            header("Location: libri.php");
         } else {
             $wrongPasswd = true;
         }
@@ -50,8 +50,7 @@ if(isset($_POST['user']) && ($user = $_POST['user']) != "" && isset($_POST['pass
 <head>
     <title>BooksReviews - login</title>
 
-    <link rel="stylesheet" href="https://bootswatch.com/_vendor/bootstrap/dist/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <?php include "includes.html"; ?>
 
 </head>
 
@@ -137,8 +136,6 @@ if(isset($_POST['user']) && ($user = $_POST['user']) != "" && isset($_POST['pass
     </script>
 
 </body>
-
-<script src="https://bootswatch.com/_vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 
 </html>
 

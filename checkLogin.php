@@ -12,7 +12,9 @@
 function checkLogin($conn, $index = false)
 {
 
-    session_start();
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
 
     if (isset($_SESSION['user'])) {
 
@@ -25,7 +27,7 @@ function checkLogin($conn, $index = false)
 
         if ($ris->num_rows != 0) {
             if($index)
-                header("Location: home.php");
+                header("Location: libri.php");
             return $user;
         }
         else {
