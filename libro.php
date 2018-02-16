@@ -9,8 +9,12 @@
 include_once "connessione.php";
 include_once "checkLogin.php";
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 if(isset($_GET['isbn'])){
-    $isbn = $_GET['isbn'];
+    $isbn = $conn->real_escape_string($_GET['isbn']);
 } else {
     die("Errore!");
 }
@@ -61,7 +65,20 @@ if(isset($_GET['isbn'])){
 
             <br><br>
 
-            <a href="aggiungiRecensione.php?isbn=<?php echo $isbn; ?>" class="btn btn-success">Aggiungi recensione</a>
+            <?php
+
+                $ris = $conn->query("SELECT * FROM recensioni WHERE id_utente=".$_SESSION['id_utente']." AND isbn=".$isbn);
+
+                if($ris->num_rows == 0)
+                    $recensito = false;
+                else
+                    $recensito = true;
+
+
+            ?>
+
+
+            <a href="aggiungiRecensione.php?isbn=<?php echo $isbn; ?>" class="btn btn-success <?php if($recensito) echo "disabled"; ?>">Aggiungi recensione</a>
 
         </div>
     </div>

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Feb 12, 2018 alle 16:14
--- Versione del server: 10.1.30-MariaDB
--- Versione PHP: 7.2.2
+-- Creato il: Feb 16, 2018 alle 21:01
+-- Versione del server: 10.1.31-MariaDB
+-- Versione PHP: 7.1.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -49,6 +49,20 @@ INSERT INTO `libri` (`isbn`, `titolo`, `autore`, `annoUscita`, `genere`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `recensioni`
+--
+
+CREATE TABLE `recensioni` (
+  `id_utente` int(11) NOT NULL,
+  `isbn` char(13) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descrizione` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `voto` tinyint(4) NOT NULL,
+  `data` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `users`
 --
 
@@ -79,6 +93,13 @@ ALTER TABLE `libri`
   ADD PRIMARY KEY (`isbn`);
 
 --
+-- Indici per le tabelle `recensioni`
+--
+ALTER TABLE `recensioni`
+  ADD PRIMARY KEY (`id_utente`,`isbn`),
+  ADD KEY `isbn` (`isbn`);
+
+--
 -- Indici per le tabelle `users`
 --
 ALTER TABLE `users`
@@ -93,6 +114,17 @@ ALTER TABLE `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- Limiti per le tabelle scaricate
+--
+
+--
+-- Limiti per la tabella `recensioni`
+--
+ALTER TABLE `recensioni`
+  ADD CONSTRAINT `recensioni_ibfk_1` FOREIGN KEY (`id_utente`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `recensioni_ibfk_2` FOREIGN KEY (`isbn`) REFERENCES `libri` (`isbn`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

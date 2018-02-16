@@ -15,21 +15,17 @@ if (session_status() == PHP_SESSION_NONE) {
 
 $user = checkLogin($conn);
 
-//TODO voto!!!!
+if(isset($_GET['isbn']) && ($isbn = $_GET['isbn']) != "" && isset($_POST['recensione']) && ($descrizione = $_POST['recensione']) != "" && isset($_POST['voto']) && ($voto = $_POST['voto']) != "" ){
 
-if(isset($_GET['isbn']) && ($isbn = $_GET['isbn']) != "" && isset($_POST['descrizione']) && ($descrizione = $_POST['descrizione']) != "" && isset($_POST['voto']) && ($voto = $_POST['voto']) != "" ){
-
-    $cliente = $_SESSION['id_utente'];
+    $utente = $_SESSION['id_utente'];
 
     $prep = $conn->prepare("INSERT INTO recensioni (id_utente, isbn, descrizione, voto, data) VALUES (?, ?, ?, ?, CURDATE())");
-    $prep->bind_param('sssss', $cliente, $isbn, $descrizione, $voto);
+    $prep->bind_param('ssss', $utente, $isbn, $descrizione, $voto);
     $prep->execute();
     $ris = $prep->get_result();
 
     if($ris == 0){
-
         header("Location: libro.php?isbn=".$isbn);
-
     } else {
         die("Errore");
     }
@@ -74,23 +70,23 @@ if(isset($_GET['isbn']) && ($isbn = $_GET['isbn']) != "" && isset($_POST['descri
 
                     <div class="form-group" id="voti">
                         <div class="custom-control custom-radio">
-                            <input type="radio" id="voto1" name="voto" class="custom-control-input" checked>
+                            <input type="radio" id="voto1" name="voto" class="custom-control-input" value="1" checked>
                             <label class="custom-control-label" for="voto1">1</label>
                         </div>
                         <div class="custom-control custom-radio">
-                            <input type="radio" id="voto2" name="voto" class="custom-control-input">
+                            <input type="radio" id="voto2" name="voto" class="custom-control-input" value="2">
                             <label class="custom-control-label" for="voto2">2</label>
                         </div>
                         <div class="custom-control custom-radio">
-                            <input type="radio" id="voto3" name="voto" class="custom-control-input">
+                            <input type="radio" id="voto3" name="voto" class="custom-control-input" value="3">
                             <label class="custom-control-label" for="voto3">3</label>
                         </div>
                         <div class="custom-control custom-radio">
-                            <input type="radio" id="voto4" name="voto" class="custom-control-input">
+                            <input type="radio" id="voto4" name="voto" class="custom-control-input" value="4">
                             <label class="custom-control-label" for="voto4">4</label>
                         </div>
                         <div class="custom-control custom-radio">
-                            <input type="radio" id="voto5" name="voto" class="custom-control-input">
+                            <input type="radio" id="voto5" name="voto" class="custom-control-input" value="5">
                             <label class="custom-control-label" for="voto5">5</label>
                         </div>
                     </div>
