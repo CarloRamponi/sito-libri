@@ -13,6 +13,7 @@ session_start();
 
 if(isset($_GET['req']) && $_GET['req'] == "logout"){
     unset($_SESSION['user']);
+    unset($_SESSION['id_utente']);
 }
 
 checkLogin($conn, true);
@@ -34,6 +35,7 @@ if(isset($_POST['user']) && ($user = $_POST['user']) != "" && isset($_POST['pass
 
         if ($hasedPasswd == $row['passwd']) {
             $_SESSION['user'] = $user;
+            $_SESSION['id_utente'] = $row['id'];
             header("Location: libri.php");
         } else {
             $wrongPasswd = true;

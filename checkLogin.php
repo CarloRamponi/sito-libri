@@ -32,6 +32,7 @@ function checkLogin($conn, $index = false)
         }
         else {
             unset($_SESSION['user']);
+            unset($_SESSION['id_utente']);
             header("Location: index.php");
         }
 

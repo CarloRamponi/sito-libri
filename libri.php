@@ -99,7 +99,7 @@ $user = checkLogin($conn);
                             html += "<tr>";
 
                             //ISBN:
-                            html += "<td><a href='libro.php?cod="+ response['response'][i][0] +"'>";
+                            html += "<td><a href='libro.php?isbn="+ response['response'][i][0] +"'>";
                             html += response['response'][i][0];
                             html += "</a></td>";
 
