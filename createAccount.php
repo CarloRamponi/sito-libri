@@ -38,7 +38,14 @@ if(isset($_POST['name']) && ($name = $_POST['name']) != "" && isset($_POST['surn
 
         if($ris == 0){
 
+            $prep = $conn->prepare("SELECT * FROM users WHERE username = ?;");
+            $prep->bind_param('s', $user);
+            $prep->execute();
+            $ris = $prep->get_result();
+            $row = $ris->fetch_array(MYSQLI_ASSOC);
+
             $_SESSION['user'] = $user;
+            $_SESSION['id_utente'] = $row['id'];
             header("Location: libri.php");
 
         } else {

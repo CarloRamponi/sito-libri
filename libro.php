@@ -56,6 +56,7 @@ if(isset($_GET['isbn'])){
                 <thead>
                 <tr>
                     <th class="myCell">Utente</th>
+                    <th class="myCell">Data</th>
                     <th class="myCell">Voto</th>
                     <th class="myCell">Recensione</th>
                 </tr>
@@ -63,7 +64,7 @@ if(isset($_GET['isbn'])){
                 <tbody>
                 <?php
 
-                    $ris = $conn->query("SELECT nome, cognome, voto, descrizione FROM recensioni r JOIN users u ON r.id_utente = u.id WHERE isbn=".$isbn);
+                    $ris = $conn->query("SELECT nome, cognome, voto, descrizione, data FROM recensioni r JOIN users u ON r.id_utente = u.id WHERE isbn=".$isbn);
 
                     if($ris->num_rows == 0)
                         echo "<td colspan='3'>Nessuna recensione per questo libro</td>";
@@ -71,6 +72,7 @@ if(isset($_GET['isbn'])){
                         while ($row = $ris->fetch_array(MYSQLI_ASSOC)){
                             echo "<tr>";
                             echo "<td>".$row['nome']." ".$row['cognome']."</td>";
+                            echo "<td>".$row['data']."</td>";
                             echo "<td>";
                             for($i=0; $i<(int)$row['voto']; $i++)   //stampo le stelline
                                 echo '<i class="fas fa-star"></i>';

@@ -67,7 +67,7 @@ if(isset($_GET['req'])) {
             if(isset($_GET['searchStr'])){
 
                 $searchStr = $conn->real_escape_string($_GET['searchStr']); //SQL INJECTIONS!!!!!!!
-                $query.=" WHERE isbn LIKE '%".$searchStr."%' OR titolo LIKE '%".$searchStr."%' OR autore LIKE '%".$searchStr."%' OR annoUscita LIKE '%".$searchStr."%' OR genere LIKE '%".$searchStr."%'";
+                $query.=" WHERE l.isbn LIKE '%".$searchStr."%' OR titolo LIKE '%".$searchStr."%' OR autore LIKE '%".$searchStr."%' OR annoUscita LIKE '%".$searchStr."%' OR genere LIKE '%".$searchStr."%'";
 
             }
 
