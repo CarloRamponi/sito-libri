@@ -73,6 +73,8 @@ $user = checkLogin($conn);
 
                     <a href="aggiungiLibro.php" class="btn btn-success">Aggiungi libro</a>
 
+                    <br><br><br><br><br>
+
                 </div>
             </div>
 

@@ -104,6 +104,8 @@ if(isset($_GET['isbn'])){
             <a href="aggiungiRecensione.php?isbn=<?php echo $isbn; ?>" class="btn btn-success <?php if($recensito) echo "disabled"; ?>">Aggiungi recensione</a>
             <a href="libri.php" class="btn btn-danger">Indietro</a>
 
+            <br><br><br><br><br>
+
         </div>
     </div>
 
