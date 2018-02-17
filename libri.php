@@ -64,6 +64,7 @@ $user = checkLogin($conn);
                                 <th class="myCell"><button onclick="changeSorting(2)" class="btn btn-link">Autore</button> <i id="span2"></i></th>
                                 <th class="myCell"><button onclick="changeSorting(3)" class="btn btn-link">Anno</button> <i id="span3"></i></th>
                                 <th class="myCell"><button onclick="changeSorting(4)" class="btn btn-link">Genere</button> <i id="span4"></i></th>
+                                <th class="myCell"><button onclick="changeSorting(5)" class="btn btn-link">Voto</button> <i id="span5"></i></th>
                             </tr>
                         </thead>
                         <tbody id="tbody">
@@ -109,6 +110,23 @@ $user = checkLogin($conn);
                                 html += "</td>";
                             }
 
+                            //voto
+                            html += "<td>";
+                            if(response['response'][i][5] !== null) {
+
+                                num = parseFloat(response['response'][i][5]);
+                                num = Math.round( num * 2 ) / 2; //lo arrotondo
+
+                                for(var k=0; k < Math.floor(num) ; k++){
+                                    html += '<i class="fas fa-star"></i>';
+                                }
+                                if( num - Math.round( num ) !== 0) { //vedo se c'è un 0.5
+                                    html += '<i class="fas fa-star-half"></i>';
+                                }
+
+                            }
+                            html += "</td>";
+
 
                             html += "</tr>";
                         }
@@ -145,7 +163,7 @@ $user = checkLogin($conn);
 
     function updateSorting() {
 
-        for(var i = 0; i < 5; i++ ){
+        for(var i = 0; i < 6; i++ ){
 
             var val = $("#span"+i);
 

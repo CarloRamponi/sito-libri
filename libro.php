@@ -9,6 +9,8 @@
 include_once "connessione.php";
 include_once "checkLogin.php";
 
+$user = checkLogin($conn);
+
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -59,7 +61,26 @@ if(isset($_GET['isbn'])){
                 </tr>
                 </thead>
                 <tbody>
-                    <?php //stampa recensioni ?>
+                <?php
+
+                    $ris = $conn->query("SELECT nome, cognome, voto, descrizione FROM recensioni r JOIN users u ON r.id_utente = u.id WHERE isbn=".$isbn);
+
+                    if($ris->num_rows == 0)
+                        echo "<td colspan='3'>Nessuna recensione per questo libro</td>";
+                    else {
+                        while ($row = $ris->fetch_array(MYSQLI_ASSOC)){
+                            echo "<tr>";
+                            echo "<td>".$row['nome']." ".$row['cognome']."</td>";
+                            echo "<td>";
+                            for($i=0; $i<(int)$row['voto']; $i++)   //stampo le stelline
+                                echo '<i class="fas fa-star"></i>';
+                            echo "</td>";
+                            echo "<td>".$row['descrizione']."</td>";
+                            echo "<tr>";
+                        }
+                    }
+
+                ?>
                 </tbody>
             </table>
 
@@ -79,6 +100,7 @@ if(isset($_GET['isbn'])){
 
 
             <a href="aggiungiRecensione.php?isbn=<?php echo $isbn; ?>" class="btn btn-success <?php if($recensito) echo "disabled"; ?>">Aggiungi recensione</a>
+            <a href="libri.php" class="btn btn-danger">Indietro</a>
 
         </div>
     </div>

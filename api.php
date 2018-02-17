@@ -61,7 +61,8 @@ if(isset($_GET['req'])) {
 
             checkLogin($conn);
 
-            $query = "SELECT * FROM libri";
+            $query = "SELECT l.isbn, titolo, autore, annoUscita, genere, AVG(r.voto) AS votoMedio FROM libri l LEFT OUTER JOIN recensioni r ON l.isbn = r.isbn";
+            $groupBy = " GROUP BY l.isbn";
 
             if(isset($_GET['searchStr'])){
 
@@ -69,6 +70,8 @@ if(isset($_GET['req'])) {
                 $query.=" WHERE isbn LIKE '%".$searchStr."%' OR titolo LIKE '%".$searchStr."%' OR autore LIKE '%".$searchStr."%' OR annoUscita LIKE '%".$searchStr."%' OR genere LIKE '%".$searchStr."%'";
 
             }
+
+            $query .= $groupBy;
 
             if(isset($_GET['orderBy'])){
                 $orderBy = $_GET['orderBy'];
