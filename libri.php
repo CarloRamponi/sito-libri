@@ -53,7 +53,14 @@ $user = checkLogin($conn);
 
             <div class="row">
 
-                <input class="form-control col-sm-12" type="text" placeholder="Cerca" id="searchBar">
+                <input class="form-control col-sm-12 col-md-6 col-lg-7" type="text" placeholder="Cerca" id="searchBar">
+
+                <div class="input-group col-sm-12 offset-md-1 col-md-5 col-lg-4 offset-lg-1" style="width: fit-content">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Libri per pagina:</span>
+                    </div>
+                    <input type="number" class="form-control" id="libriPerPagina" value="10">
+                </div>
 
             </div>
 
@@ -84,54 +91,15 @@ $user = checkLogin($conn);
                         </table>
                     </div>
 
-                    <?php
-
-                    //vedo quanti libri ci sono nel database per calcolare quanti bottoni creare
-
-                    $libriPerPagina = 3;
-
-                    $ris = $conn->query("SELECT * FROM libri;");
-                    $numLibri = $ris->num_rows;
-
-                    ?>
-
                     <div class="text-center">
 
-                        <?php
-                        if($numLibri > 0) {
-                            ?>
+                        <div class="center">
+                            <ul class="pagination pagination-lg" id="pagination" hidden>
 
-                            <div class="center">
-                                <ul class="pagination pagination-lg">
-                                    <li id="paginationFirst" class="page-item disabled">
-                                        <a class="page-link" onclick="pagination(-1)"><i class="fas fa-angle-double-left paginationIcon"></i></a>
-                                    </li>
-                                    <li id="paginationPrev" class="page-item disabled">
-                                        <a class="page-link" onclick="pagination(-3)"><i class="fas fa-angle-left paginationIcon"></i></a>
-                                    </li>
-                                    <?php
-                                    for($i=0; $i<$numLibri/$libriPerPagina; $i++) {
-                                        ?>
-                                        <li id="pagination<?php echo $i; ?>" class="page-item <?php echo ($i==0)? "active": "" ?>">
-                                            <a class="page-link" onclick="pagination(<?php echo $i; ?>)"><?php echo $i+1; ?></a>
-                                        </li>
-                                        <?php
-                                    }
-                                    ?>
-                                    <li id="paginationNext" class="page-item">
-                                        <a class="page-link" onclick="pagination(-4)"><i class="fas fa-angle-right paginationIcon"></i></a>
-                                    </li>
-                                    <li id="paginationLast" class="page-item">
-                                        <a class="page-link" onclick="pagination(-2)"><i class="fas fa-angle-double-right paginationIcon"></i></a>
-                                    </li>
-                                </ul>
-                            </div>
+                            </ul>
+                        </div>
 
-                            <br>
-
-                            <?php
-                        }
-                        ?>
+                        <br>
 
                         <a href="aggiungiLibro.php" class="btn btn-success center">Aggiungi libro</a>
 
@@ -158,9 +126,14 @@ $user = checkLogin($conn);
                 if(response['request'] === 'getLibri'){
                     if(response['response'] === "noElements"){
                         $("#tbody").html("<tr><td colspan=5>Nessun libro corrisponde ai criteri di ricerca</td></tr>");
+                        if(numPagine !== (numPagine = 0))   //se il numero di pagine è cambiato
+                            pagination(-5);
                     } else {
 
                         var html = "";
+
+                        if ( numPagine !== (numPagine = (response['totalRows']%libriPerPagina === 0)? response['totalRows']/libriPerPagina -1 : Math.floor(response['totalRows']/libriPerPagina)) )
+                            pagination(-5);
 
                         for(var i = 0; i < response['length']; i++){
                             html += "<tr>";
@@ -230,17 +203,62 @@ $user = checkLogin($conn);
 
     var searchStr="";
 
-    var libriPerPagina=<?php echo $libriPerPagina; ?>;
-    var numPagine = <?php echo ($numLibri%$libriPerPagina == 0)? ($numLibri/$libriPerPagina)-1 : (int)($numLibri/$libriPerPagina) ; ?>;
+    var libriPerPagina=10;
+    var numPagine;
     var page=0;
 
     function pagination(index) {
 
-        if(page !== index){
+        if(index === -5) {
 
-            if(index < 0) { //se è stato clieccato il first o il last
+            //ricostruisco la pagination
 
-                switch (index){
+            page = 0;
+
+            var elem = $("#pagination");
+
+            if(numPagine === 0) {
+                elem.prop('hidden', true);
+                elem.html("");
+            } else {
+
+                elem.prop('hidden', false);
+
+                var html = "";
+
+                html += '<li id="paginationFirst" class="page-item disabled">' +
+                    '       <a class="page-link" onclick="pagination(-1)"><i class="fas fa-angle-double-left paginationIcon"></i></a>' +
+                    '   </li>' +
+                    '   <li id="paginationPrev" class="page-item disabled">' +
+                    '       <a class="page-link" onclick="pagination(-3)"><i class="fas fa-angle-left paginationIcon"></i></a>' +
+                    '   </li>';
+
+                for(var i=0; i <= numPagine; i++) {
+
+                    html += '<li id="pagination'+i+'" class="page-item '+((i===0)? "active" : "")+'">' +
+                                '<a class="page-link" onclick="pagination('+i+')">'+(i+1)+'</a>' +
+                            '</li>'
+
+                }
+
+                html += '<li id="paginationNext" class="page-item">' +
+                    '       <a class="page-link" onclick="pagination(-4)"><i class="fas fa-angle-right paginationIcon"></i></a>' +
+                    '    </li>' +
+                    '    <li id="paginationLast" class="page-item">' +
+                    '       <a class="page-link" onclick="pagination(-2)"><i class="fas fa-angle-double-right paginationIcon"></i></a>' +
+                    '    </li>';
+
+                elem.html(html);
+
+            }
+
+        }
+
+        if (page !== index) {
+
+            if (index < 0) { //se è stato cliccato il first, il last, il prev o il next
+
+                switch (index) {
                     case -1:
                         page = 0;
                         break;
@@ -270,7 +288,7 @@ $user = checkLogin($conn);
             getBooks();
 
             //abilito il nuovo elemento e controllo se è all'inizio o alla fine
-            if(page === 0){
+            if (page === 0) {
                 $("#paginationFirst").addClass("disabled");
                 $("#paginationPrev").addClass("disabled");
             } else {
@@ -278,7 +296,7 @@ $user = checkLogin($conn);
                 $("#paginationPrev").removeClass("disabled");
             }
 
-            if(page === numPagine){
+            if (page === numPagine) {
                 $("#paginationLast").addClass("disabled");
                 $("#paginationNext").addClass("disabled");
             } else {
@@ -286,11 +304,11 @@ $user = checkLogin($conn);
                 $("#paginationNext").removeClass("disabled");
             }
 
-            for(var i = 0; i <= numPagine; i++) {
+            for (var i = 0; i <= numPagine; i++) {
 
-                elem = $("#pagination"+i);
+                elem = $("#pagination" + i);
 
-                if(i === page){
+                if (i === page) {
                     elem.addClass("active");
                 } else {
                     elem.removeClass("active");
@@ -354,6 +372,11 @@ $user = checkLogin($conn);
         searchStr = this.value;
         getBooks();
 
+    });
+
+    $("#libriPerPagina").change(function () {
+        libriPerPagina = this.value;
+        getBooks();
     });
 
     $("#badge").click( function () {

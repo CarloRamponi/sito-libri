@@ -87,6 +87,10 @@ if(isset($_GET['req'])) {
                 }
             }
 
+            //devo quante solo le righe totali:
+            $ris = $conn->query($query);
+            $numTotalRows = $ris->num_rows;
+
             if(isset($_GET['from']) && isset($_GET['numberOfRows'])){
                 $from = $conn->real_escape_string($_GET['from']);
                 $numberOfRows = $conn->real_escape_string($_GET['numberOfRows']);
@@ -104,7 +108,7 @@ if(isset($_GET['req'])) {
                 while ($row = $ris->fetch_array(MYSQLI_NUM)){
                     array_push($books, $row);
                 }
-                $arr = array('request' => $req, 'length' => $ris->num_rows , 'response' => $books);
+                $arr = array('request' => $req, 'length' => $ris->num_rows , 'totalRows' => $numTotalRows , 'response' => $books);
             }
 
             echo json_encode($arr);
