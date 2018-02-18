@@ -87,6 +87,14 @@ if(isset($_GET['req'])) {
                 }
             }
 
+            if(isset($_GET['from']) && isset($_GET['numberOfRows'])){
+                $from = $conn->real_escape_string($_GET['from']);
+                $numberOfRows = $conn->real_escape_string($_GET['numberOfRows']);
+
+                $query .= " LIMIT ".$from.", ".$numberOfRows;
+
+            }
+
             $ris = $conn->query($query);
 
             if($ris->num_rows == 0){

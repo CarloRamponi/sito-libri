@@ -25,6 +25,17 @@ $user = checkLogin($conn);
         .myCell{
             min-width: 150px;
         }
+
+        .center {
+            width: fit-content;
+            float: none;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .paginationIcon {
+            line-height: 1.5;
+        }
     </style>
 
 </head>
@@ -56,22 +67,75 @@ $user = checkLogin($conn);
             <div class="row">
                 <div class="col-sm-12">
 
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th class="myCell"><button onclick="changeSorting(0)" class="btn btn-link">ISBN</button> <i id="span0"></i></th>
-                                <th class="myCell"><button onclick="changeSorting(1)" class="btn btn-link">Titolo</button> <i id="span1"></i></th>
-                                <th class="myCell"><button onclick="changeSorting(2)" class="btn btn-link">Autore</button> <i id="span2"></i></th>
-                                <th class="myCell"><button onclick="changeSorting(3)" class="btn btn-link">Anno</button> <i id="span3"></i></th>
-                                <th class="myCell"><button onclick="changeSorting(4)" class="btn btn-link">Genere</button> <i id="span4"></i></th>
-                                <th class="myCell"><button onclick="changeSorting(5)" class="btn btn-link">Voto</button> <i id="span5"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody">
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="myCell"><button onclick="changeSorting(0)" class="btn btn-link">ISBN</button> <i id="span0"></i></th>
+                                    <th class="myCell"><button onclick="changeSorting(1)" class="btn btn-link">Titolo</button> <i id="span1"></i></th>
+                                    <th class="myCell"><button onclick="changeSorting(2)" class="btn btn-link">Autore</button> <i id="span2"></i></th>
+                                    <th class="myCell"><button onclick="changeSorting(3)" class="btn btn-link">Anno</button> <i id="span3"></i></th>
+                                    <th class="myCell"><button onclick="changeSorting(4)" class="btn btn-link">Genere</button> <i id="span4"></i></th>
+                                    <th class="myCell"><button onclick="changeSorting(5)" class="btn btn-link">Voto</button> <i id="span5"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody">
+                            </tbody>
+                        </table>
+                    </div>
 
-                    <a href="aggiungiLibro.php" class="btn btn-success">Aggiungi libro</a>
+                    <?php
+
+                    //vedo quanti libri ci sono nel database per calcolare quanti bottoni creare
+
+                    $libriPerPagina = 3;
+
+                    $ris = $conn->query("SELECT * FROM libri;");
+                    $numLibri = $ris->num_rows;
+
+                    ?>
+
+                    <div class="text-center">
+
+                        <?php
+                        if($numLibri > 0) {
+                            ?>
+
+                            <div class="center">
+                                <ul class="pagination pagination-lg">
+                                    <li id="paginationFirst" class="page-item disabled">
+                                        <a class="page-link" onclick="pagination(-1)"><i class="fas fa-angle-double-left paginationIcon"></i></a>
+                                    </li>
+                                    <li id="paginationPrev" class="page-item disabled">
+                                        <a class="page-link" onclick="pagination(-3)"><i class="fas fa-angle-left paginationIcon"></i></a>
+                                    </li>
+                                    <?php
+                                    for($i=0; $i<$numLibri/$libriPerPagina; $i++) {
+                                        ?>
+                                        <li id="pagination<?php echo $i; ?>" class="page-item <?php echo ($i==0)? "active": "" ?>">
+                                            <a class="page-link" onclick="pagination(<?php echo $i; ?>)"><?php echo $i+1; ?></a>
+                                        </li>
+                                        <?php
+                                    }
+                                    ?>
+                                    <li id="paginationNext" class="page-item">
+                                        <a class="page-link" onclick="pagination(-4)"><i class="fas fa-angle-right paginationIcon"></i></a>
+                                    </li>
+                                    <li id="paginationLast" class="page-item">
+                                        <a class="page-link" onclick="pagination(-2)"><i class="fas fa-angle-double-right paginationIcon"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <br>
+
+                            <?php
+                        }
+                        ?>
+
+                        <a href="aggiungiLibro.php" class="btn btn-success center">Aggiungi libro</a>
+
+                    </div>
 
                     <br><br><br><br><br>
 
@@ -151,6 +215,9 @@ $user = checkLogin($conn);
             url += "&searchStr="+searchStr;
         }
 
+        url += "&from="+(page*libriPerPagina);
+        url += "&numberOfRows="+libriPerPagina;
+
         xmlhttp.open("GET", url);
         xmlhttp.send();
 
@@ -162,6 +229,78 @@ $user = checkLogin($conn);
     var descIcon = "fa-sort-alpha-up";
 
     var searchStr="";
+
+    var libriPerPagina=<?php echo $libriPerPagina; ?>;
+    var numPagine = <?php echo ($numLibri%$libriPerPagina == 0)? ($numLibri/$libriPerPagina)-1 : (int)($numLibri/$libriPerPagina) ; ?>;
+    var page=0;
+
+    function pagination(index) {
+
+        if(page !== index){
+
+            if(index < 0) { //se è stato clieccato il first o il last
+
+                switch (index){
+                    case -1:
+                        page = 0;
+                        break;
+
+                    case -2:
+                        page = numPagine;
+                        break;
+
+                    case -3:
+                        page -= 1;
+                        break;
+
+                    case -4:
+                        page += 1;
+                        break;
+
+                    default:
+                        break;
+                }
+
+            } else {
+
+                page = index;
+
+            }
+
+            getBooks();
+
+            //abilito il nuovo elemento e controllo se è all'inizio o alla fine
+            if(page === 0){
+                $("#paginationFirst").addClass("disabled");
+                $("#paginationPrev").addClass("disabled");
+            } else {
+                $("#paginationFirst").removeClass("disabled");
+                $("#paginationPrev").removeClass("disabled");
+            }
+
+            if(page === numPagine){
+                $("#paginationLast").addClass("disabled");
+                $("#paginationNext").addClass("disabled");
+            } else {
+                $("#paginationLast").removeClass("disabled");
+                $("#paginationNext").removeClass("disabled");
+            }
+
+            for(var i = 0; i <= numPagine; i++) {
+
+                elem = $("#pagination"+i);
+
+                if(i === page){
+                    elem.addClass("active");
+                } else {
+                    elem.removeClass("active");
+                }
+
+            }
+
+        }
+
+    }
 
     function updateSorting() {
 
@@ -192,6 +331,7 @@ $user = checkLogin($conn);
             asc = true;
         }
 
+        pagination(0);
         updateSorting();
         getBooks();
 
@@ -210,6 +350,7 @@ $user = checkLogin($conn);
             badge.show();
         }
 
+        pagination(0);
         searchStr = this.value;
         getBooks();
 
@@ -224,6 +365,7 @@ $user = checkLogin($conn);
         badge.hide();
 
         searchStr = "";
+        pagination(0);
         getBooks();
 
     } );
