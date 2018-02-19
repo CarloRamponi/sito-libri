@@ -15,6 +15,7 @@ if(isset($_GET['req'])) {
 
     switch ($req) {
         case "usernameExists":
+
             if (isset($_GET['user']))
                 $user = $_GET['user'];
             else
@@ -30,6 +31,7 @@ if(isset($_GET['req'])) {
             else
                 $arr = array('request' => $req, 'response' => false);
 
+            header('Content-Type: application/json');
             echo json_encode($arr);
 
             break;
@@ -53,6 +55,7 @@ if(isset($_GET['req'])) {
             else
                 $arr = array('request' => $req, 'response' => false);
 
+            header('Content-Type: application/json');
             echo json_encode($arr);
 
             break;
@@ -111,6 +114,7 @@ if(isset($_GET['req'])) {
                 $arr = array('request' => $req, 'length' => $ris->num_rows , 'totalRows' => $numTotalRows , 'response' => $books);
             }
 
+            header('Content-Type: application/json');
             echo json_encode($arr);
 
             break;
