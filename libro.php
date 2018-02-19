@@ -52,6 +52,18 @@ if(isset($_GET['isbn'])){
     <div class="row">
         <div class="col-sm-12">
 
+            <?php
+
+                $ris = $conn->query("SELECT * FROM libri WHERE isbn=".$isbn);
+                $row = $ris->fetch_array(MYSQLI_ASSOC);
+
+                echo "<h1>".$row['titolo']."</h1><br>";
+                echo "<h3>".$row['autore']."</h3><br>";
+
+            ?>
+
+            <br>
+
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -61,7 +73,6 @@ if(isset($_GET['isbn'])){
                     <th class="myCell">Recensione</th>
                 </tr>
                 </thead>
-                <tbody>
                 <?php
 
                     $ris = $conn->query("SELECT nome, cognome, voto, descrizione, data FROM recensioni r JOIN users u ON r.id_utente = u.id WHERE isbn=".$isbn);
@@ -83,7 +94,6 @@ if(isset($_GET['isbn'])){
                     }
 
                 ?>
-                </tbody>
             </table>
 
             <br><br>
@@ -101,7 +111,8 @@ if(isset($_GET['isbn'])){
             ?>
 
 
-            <a href="aggiungiRecensione.php?isbn=<?php echo $isbn; ?>" class="btn btn-success <?php if($recensito) echo "disabled"; ?>">Aggiungi recensione</a>
+            <a href="aggiungiRecensione.php?isbn=<?php echo $isbn; ?>&action=<?php echo ($recensito)? "edit" : "add"; ?>" class="btn btn-success"><?php echo ($recensito)? "Modifica" : "Aggiungi"; ?> recensione</a>
+            <?php if($recensito) { ?> <a href="eliminaRecensione.php?isbn=<?php echo $isbn; ?>" class="btn btn-danger">Elimina recensione</a> <?php } ?>
             <a href="libri.php" class="btn btn-danger">Indietro</a>
 
             <br><br><br><br><br>

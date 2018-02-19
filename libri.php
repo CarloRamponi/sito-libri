@@ -93,7 +93,7 @@ $user = checkLogin($conn);
 
                     <div class="text-center">
 
-                        <div class="center">
+                        <div class="center fixed-bottom">
                             <ul class="pagination pagination-lg" id="pagination" hidden>
 
                             </ul>
