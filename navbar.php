@@ -20,6 +20,9 @@
             <li class="nav-item <?php echo ($pageNum == 1)? "active" : ""?>">
                 <a class="nav-link" href="<?php echo ($pageNum != 1)? "libri.php" : "#" ?>">Libri</a>
             </li>
+            <li class="nav-item <?php echo ($pageNum == 2)? "active" : ""?>">
+                <a class="nav-link" href="<?php echo ($pageNum != 2)? "mieRecensioni.php" : "#" ?>">Le mie recensioni</a>
+            </li>
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown">

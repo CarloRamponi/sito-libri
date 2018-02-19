@@ -75,7 +75,6 @@ if(isset($_POST['recensione']) && ($descrizione = $conn->real_escape_string($_PO
 <body>
 
 <?php
-    $pageNum = 1;
     include "navbar.php";
 ?>
 
