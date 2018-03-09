@@ -114,27 +114,22 @@ if(isset($_POST['recensione']) && ($descrizione = $conn->real_escape_string($_PO
 
                 <div class="fieldset">
 
-                    <div class="form-group" id="voti">
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="voto1" name="voto" class="custom-control-input" value="1" <?php echo (!$action)? "checked" : (($voto == 1)? "checked" : "") ?>>
-                            <label class="custom-control-label" for="voto1">1</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="voto2" name="voto" class="custom-control-input" value="2" <?php echo ($action)? (($voto == 2)? "checked" : "") : "" ?>>
-                            <label class="custom-control-label" for="voto2">2</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="voto3" name="voto" class="custom-control-input" value="3" <?php echo ($action)? (($voto == 3)? "checked" : "") : "" ?>>
-                            <label class="custom-control-label" for="voto3">3</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="voto4" name="voto" class="custom-control-input" value="4" <?php echo ($action)? (($voto == 4)? "checked" : "") : "" ?>>
-                            <label class="custom-control-label" for="voto4">4</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="voto5" name="voto" class="custom-control-input" value="5" <?php echo ($action)? (($voto == 5)? "checked" : "") : "" ?>>
-                            <label class="custom-control-label" for="voto5">5</label>
-                        </div>
+                    <div class="btn-group btn-group-toggle my-2" data-toggle="buttons">
+                        <label class="btn btn-primary <?php echo (!$action)? "active" : (($voto == 1)? "active" : "") ?>">
+                            <input type="radio" name="voto" id="voto1" value="1" autocomplete="off" <?php echo (!$action)? "checked" : (($voto == 1)? "checked" : "") ?>> 1
+                        </label>
+                        <label class="btn btn-primary <?php echo ($action)? (($voto == 2)? "active" : "") : "" ?>">
+                            <input type="radio" name="voto" id="voto2" value="2" autocomplete="off" <?php echo ($action)? (($voto == 2)? "checked" : "") : "" ?>> 2
+                        </label>
+                        <label class="btn btn-primary <?php echo ($action)? (($voto == 3)? "active" : "") : "" ?>">
+                            <input type="radio" name="voto" id="voto3" value="3" autocomplete="off" <?php echo ($action)? (($voto == 3)? "checked" : "") : "" ?>> 3
+                        </label>
+                        <label class="btn btn-primary <?php echo ($action)? (($voto == 4)? "active" : "") : "" ?>">
+                            <input type="radio" name="voto" id="voto4" value="4" autocomplete="off" <?php echo ($action)? (($voto == 4)? "checked" : "") : "" ?>> 4
+                        </label>
+                        <label class="btn btn-primary <?php echo ($action)? (($voto == 5)? "active" : "") : "" ?>">
+                            <input type="radio" name="voto" id="voto5" value="5" autocomplete="off" <?php echo ($action)? (($voto == 5)? "checked" : "") : "" ?>> 5
+                        </label>
                     </div>
 
                     <div class="form-group has-danger">
